@@ -1,11 +1,14 @@
-import org.junit.Test;
-import org.junit.Before;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import com.aventstack.extentreports.Status;
 
-import static org.junit.Assert.assertEquals;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
+
+import static org.testng.Assert.assertEquals;
+
+
+@Listeners(ExtentTestNGITestListener.class)
 
 
 public class CheckoutTest extends Hooks {
@@ -13,42 +16,33 @@ public class CheckoutTest extends Hooks {
     public CheckoutPage checkoutPage;
     public WebDriverWait wait;
 
-    @Before
+    @BeforeMethod
     public void SetupPageObject() {
         checkoutPage = new CheckoutPage(driver);
         wait = new WebDriverWait(driver, 10);
     }
 
     @Test
-    public void checkoutAsAGuestTest() throws InterruptedException {
-        checkoutPage.addItemToCart();
-        checkoutPage.cartInfo();
-        checkoutPage.clickGuest();
-        checkoutPage.checkoutMandatoryFields();
-        checkoutPage.checkoutContinueButtons();
-        checkoutPage.assertTextWhenReady(checkoutPage.subTitleElement, "THANK YOU FOR YOUR PURCHASE!");
-    }
+    public void addProductOne()  {
 
+        checkoutPage.addProductOne();
+        String message = checkoutPage.getText();
+        assertEquals(message ,"Awesome Granite Chips");
+    }
     @Test
-    public void checkFirstNameMandatoryFieldTest() {
-        checkoutPage.fillMandatoryFieldsExcept(checkoutPage.firstname);
-        checkoutPage.assertTextWhenReady(checkoutPage.requiredFirstName, "This is a required field.");
+    public void addToWhishlist (){
+        checkoutPage.addProductOne();
+        checkoutPage.clickOnWhishlist();
     }
+    @Test(description = "Click on search button")
+    public void clickOnSearchButton (){
 
-    @Test
-    public void checkLastNameMandatoryFieldTest() {
-        checkoutPage.fillMandatoryFieldsExcept(checkoutPage.lastname);
-        checkoutPage.assertTextWhenReady(checkoutPage.requiredLastName, "This is a required field.");
+        checkoutPage.clickOnSearchButton();
+        checkoutPage.clickSearchBar();
+
+        assertEquals("Refined Frozen Mouse",checkoutPage.getGetFrozenMouse().getText());
+        assertEquals("Practical Metal Mouse",checkoutPage.getGetMetalMouse().getText());
+        ExtentTestNGITestListener.getTest().log(Status.INFO,"Two product has found");
     }
-
-    @Test
-    public void checkAddressMandatoryFieldTest(){
-     //   checkoutPage.fillMandatoryFieldsExcept(checkoutPage.address);
-    }
-
-
-
-
-
 
 }
