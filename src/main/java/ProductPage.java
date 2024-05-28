@@ -52,8 +52,8 @@ public class ProductPage extends BasePage {
         return productPrice.getText().split(" ")[0].trim();
     }
 
-//    public void goToShoppingCart(){
-//        getShoppingCart().click();
-//    }
+    public void goToShoppingCart(){
+       getShoppingCart().click();
+   }
 
 }

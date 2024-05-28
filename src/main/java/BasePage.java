@@ -97,4 +97,8 @@ public abstract class BasePage {
         shoppingBag.click();
     }
 
+    public WebElement getShoppingCart(){
+        return shoppingCart;
+    }
+
 }
