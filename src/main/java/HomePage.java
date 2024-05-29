@@ -1,7 +1,9 @@
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class HomePage extends BasePage {
@@ -14,34 +16,61 @@ public class HomePage extends BasePage {
     }
 
     @FindBy (css = "svg[data-icon='cart-plus']")
-    private WebElement addProductOne ;
-    @FindBy (linkText = "Awesome Granite Chips")
-    private WebElement productName;
-    public String getText(){
-        return productName.getText();
-    }
+    private WebElement addFirstProduct;
+    @FindBy (css = ".svg-inline--fa.fa-heart.fa-w-16.fa-2x")
+    private WebElement productToWishlist;
+    @FindBy(css = "svg[data-icon='sign-in-alt']")
+    private WebElement login;
+    @FindBy(css = "svg[data-icon='sign-out-alt']")
+    private WebElement logout;
+    @FindBy(id = "user-name")
+    private WebElement userName;
+    @FindBy(id = "password")
+    private WebElement pwd;
+    @FindBy(css = ".btn-primary")
+    private WebElement loginButton;
+    @FindBy(linkText = "dino")
+    private WebElement accountName;
+    @FindBy(xpath = "//span[contains(text(), 'Hello guest!')]")
+    private WebElement greetingMessage;
     @FindBy (css = "svg[data-icon='heart']")
     private WebElement whishlist;
-    public void clickOnWhishlist (){
-        whishlist.click();
-    }
     @FindBy (id = "input-search")
     private WebElement searchButton;
-
-//    @FindBy( css = ".btn.btn-light.btn-sm")
-//    private WebElement searchBar;
-
     @FindBy (linkText = "Refined Frozen Mouse")
     private WebElement getFrozenMouse ;
-
     @FindBy (linkText = "Practical Metal Mouse")
     private WebElement getMetalMouse;
-
     @FindBy (linkText = "Awesome Granite Chips")
     private WebElement awesomeGraniteChips;
+    @FindBy (linkText = "Refined Frozen Mouse")
+    private WebElement refinedFrozenMouse;
+    @FindBy(css = ".card-text span")
+    private WebElement productPrice;
+    @FindBy(css = "svg[data-icon='shopping-cart']")
+    private WebElement shoppingCart;
+    @FindBy(css = ".sort-products-select.form-control.form-control-sm")
+    private WebElement sortingProducts;
 
-    public void clickOnProduct() {
-        addProductOne.click();
+    public void addProductToCart() {
+        addFirstProduct.click();
+    }
+    public void addProductToWishlist() {
+        productToWishlist.click();
+    }
+    public boolean verifyProductAddedToCart(String product){
+        shoppingCart.click();
+        String productName = driver.findElement(By.linkText(product)).getText();
+        if(productName.equals(product))
+            return true;
+        return false;
+    }
+    public boolean verifyProductAddedToWishList(String product){
+        whishlist.click();
+        String productName = driver.findElement(By.linkText(product)).getText();
+        if(productName.equals(product))
+            return true;
+        return false;
     }
     public void clickOnSearchButton (){
         searchButton.sendKeys("mouse");
@@ -56,26 +85,52 @@ public class HomePage extends BasePage {
         return getMetalMouse;
     }
     public void logIntoApplication(){
-        getGoToLogin().click();
-        waitForElementToAppear(getUserNameField());
-        getUserNameField().sendKeys("dino");
-        getPwdField().sendKeys("choochoo");
-        getLoginButton().click();
+        login.click();
+        waitForElementToAppear(userName);
+        userName.sendKeys("dino");
+        pwd.sendKeys("choochoo");
+        loginButton.click();
     }
-
     public String getAccountName(){
-        return getAccount().getText();
+        return accountName.getText();
     }
-
     public void logOutOfApplication(){
-        getLogout().click();
+        logout.click();
     }
-
     public String getGreetingMessage(){
-        return getGreetMessage().getText();
+        return greetingMessage.getText();
     }
-
     public void clickOnProductOne(){
         awesomeGraniteChips.click();
+    }
+
+    Select select = new Select(sortingProducts);
+
+    public void selectProductBy(String text){
+        select.selectByVisibleText(text);
+    }
+    public boolean isSortedByNameAsc(){
+        if(awesomeGraniteChips.getText().equals("Awesome Granite Chips")){
+            return true;
+        }
+        return false;
+    }
+    public boolean isSortedByNameDesc(){
+        if(refinedFrozenMouse.getText().equals("Refined Frozen Mouse")){
+            return true;
+        }
+        return false;
+    }
+    public boolean isSortedByPriceAsc(){
+        if(productPrice.getText().equals("1.99")){
+            return true;
+        }
+        return false;
+    }
+    public boolean isSortedByPriceDesc(){
+        if(productPrice.getText().equals("29.99")){
+            return true;
+        }
+        return false;
     }
 }
